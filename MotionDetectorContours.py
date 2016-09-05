@@ -7,7 +7,7 @@ class MotionDetectorAdaptative():
     def onChange(self, val): #callback when the user change the detection threshold
         self.threshold = val
     
-    def __init__(self,threshold=25, doRecord=True, showWindows=True):
+    def __init__(self,threshold=7, doRecord=True, showWindows=True):
         self.writer = None
         self.font = None
         self.doRecord=doRecord #Either or not record the moving object
