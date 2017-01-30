@@ -18,6 +18,6 @@ Find the contours of the moving objects and calculate the area of all of them. T
 ## More info ##
 
 * usually takes about 5 seconds to start up
-* initRecorder: here, you can change the output video codec
+* initRecorder: you can switch the output video format here
 * somethingHasMoved: pixel comparison
 * processImage: the fun stuff!
