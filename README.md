@@ -17,7 +17,7 @@ Find the contours of the moving objects and calculate the area of all of them. T
 
 ## More info ##
 
-* webcams usually need about 5 seconds to start up
-* initRecorder is where video output codec can be changed
-* processImage is where the cool stuff happens
+* usually takes about 5 seconds to start up
+* initRecorder: here, you can change the output video codec
 * somethingHasMoved: pixel comparison
+* processImage: the fun stuff!
