@@ -1,4 +1,4 @@
-Motion-detection-OpenCV
+Python Security Camera
 =======================
 
 Python/OpenCV script that detect motion on webcam and allow record it to a file.
