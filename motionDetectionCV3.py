@@ -1,6 +1,7 @@
 # coding=utf-8
 """
-Webcam motion detection
+Webcam motion detection and object detection
+Confirmed working on Python 3.6.2 with OpenCV 3.4.0 on Win10
 """
 import cv2
 import numpy as np
