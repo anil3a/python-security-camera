@@ -36,8 +36,13 @@ _stream = pa.open(format=pyaudio.paInt16,
                   input=True,
                   frames_per_buffer=NUM_SAMPLES)
 
+def addToLog(appendText):
+    print (appendText)
+    with open("log.txt", "a") as myfile:
+        myfile.write("\n"+appendText)
+
 #ctypes.windll.user32.LockWorkStation()
-print("Alarm detector working. Press CTRL-C to quit.")
+addToLog ("Listening for "+str(alarmlength)+" beeps of "+str(beeplength * 46)+"ms at "+str(TONE)+"Hz")
 
 blipcount=0
 beepcount=0
@@ -76,7 +81,8 @@ while True:
             if (beepcount>=alarmlength):
                 if not alarm:
                     datetime = time.strftime('%Y-%m-%d %H:%M:%S')
-                    print ("Alarm triggered at "+datetime)
+                    humantime = time.strftime('%I:%M:%S %p %Z')
+                    addToLog ("Alarm triggered at "+datetime+" ("+humantime+")")
                 clearcount=0
                 alarm=True
                 if debug: print ("Alarm!")
@@ -93,7 +99,7 @@ while True:
                 if debug: print ("\t\tclear",clearcount)
                 if clearcount>=clearlength:
                     clearcount=0
-                    print ("Listening...")
+                    addToLog ("Listening...")
                     alarm=False
             else:
                 if debug: print ("No alarm")
