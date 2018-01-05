@@ -1,10 +1,10 @@
 # coding=utf-8
 """
-Webcam motion detection and object detection
-Confirmed working on Python 3.6.2 with OpenCV 3.4.0 on Win10
+Webcam motion detection
 """
 import cv2
 import numpy as np
+import pygame
 
 THRESHOLD = 40
 camera = cv2.VideoCapture(0)
@@ -15,6 +15,8 @@ background = None
 
 # Write test video
 fps = 20 #camera.get(cv2.CAP_PROP_FPS)
+pygame.mixer.init()
+cameraSound = pygame.mixer.Sound("snapshotsound.ogg")
 size = (int(camera.get(cv2.CAP_PROP_FRAME_WIDTH)),
         int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT)))
 videoWriter = cv2.VideoWriter('basic_motion_detection.avi',
@@ -41,6 +43,9 @@ while (True):
     image, cnts, hierarchy = cv2.findContours(diff.copy(),
                                               cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     print ("Detecting " + str(len(cnts)) + " Moving Objects")
+    if len(cnts) > 0:
+        cameraSound.play()
+
     for c in cnts:
         if cv2.contourArea(c) < 1500:
             continue
