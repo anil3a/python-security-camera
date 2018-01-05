@@ -2,7 +2,8 @@
 import pyaudio
 from numpy import zeros,linspace,short,fromstring,hstack,transpose,log
 from scipy import fft
-from time import sleep
+import time
+import ctypes
 
 #Volume Sensitivity, 0.05: Extremely Sensitive, may give false alarms
 #             0.1: Probably Ideal volume
@@ -23,7 +24,7 @@ clearlength=30
 # Enable blip, beep, and reset debug output
 debug=False
 # Show the most intense frequency detected (useful for configuration)
-frequencyoutput=True
+frequencyoutput=False
 
 
 #Set up audio sampler - 
@@ -35,6 +36,7 @@ _stream = pa.open(format=pyaudio.paInt16,
                   input=True,
                   frames_per_buffer=NUM_SAMPLES)
 
+#ctypes.windll.user32.LockWorkStation()
 print("Alarm detector working. Press CTRL-C to quit.")
 
 blipcount=0
@@ -44,7 +46,7 @@ clearcount=0
 alarm=False
 
 while True:
-    while _stream.get_read_available()< NUM_SAMPLES: sleep(0.01)
+    while _stream.get_read_available()< NUM_SAMPLES: time.sleep(0.01)
     audio_data  = fromstring(_stream.read(
          _stream.get_read_available()), dtype=short)[-NUM_SAMPLES:]
     # Each data point is a signed 16 bit number, so we can normalize by dividing 32*1024
@@ -61,7 +63,7 @@ while True:
             thefreq = (which+x1)*SAMPLING_RATE/NUM_SAMPLES
         else:
             thefreq = which*SAMPLING_RATE/NUM_SAMPLES
-        print ("\t\t\t\tfreq=",thefreq)
+        if debug: print ("\t\t\t\tfreq=",thefreq)
     if max(intensity[(frequencies < TONE+BANDWIDTH) & (frequencies > TONE-BANDWIDTH )]) > max(intensity[(frequencies < TONE-1000) & (frequencies > TONE-2000)]) + SENSITIVITY:
         blipcount+=1
         resetcount=0
@@ -72,9 +74,12 @@ while True:
             beepcount+=1
             if debug: print ("\tBeep",beepcount)
             if (beepcount>=alarmlength):
+                if not alarm:
+                    datetime = time.strftime('%Y-%m-%d %H:%M:%S')
+                    print ("Alarm triggered at "+datetime)
                 clearcount=0
                 alarm=True
-                print ("Alarm!")
+                if debug: print ("Alarm!")
                 beepcount=0
     else:
         blipcount=0
@@ -88,8 +93,8 @@ while True:
                 if debug: print ("\t\tclear",clearcount)
                 if clearcount>=clearlength:
                     clearcount=0
-                    print ("Cleared alarm!")
+                    print ("Listening...")
                     alarm=False
-    sleep(0.01)
-
-
+            else:
+                if debug: print ("No alarm")
+    time.sleep(0.01)
